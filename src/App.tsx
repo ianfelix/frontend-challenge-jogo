@@ -1,27 +1,31 @@
 import "./game";
-import { LoadingScreen } from "./components/LoadingScreen";
-import { Menu, Wifi } from "lucide-react";
+import {
+  Header,
+  LoadingScreen,
+  MainContent,
+  GameInitializer,
+} from "./components";
+import { GameProvider } from "./contexts/GameContext.tsx";
+
+const AppContent = () => {
+  return (
+    <>
+      <GameInitializer />
+      <LoadingScreen />
+
+      <main className="grid size-full h-screen grid-rows-[auto_1fr] bg-[#2B265A]">
+        <Header />
+        <MainContent />
+      </main>
+    </>
+  );
+};
 
 function App() {
   return (
-    <>
-      {/* <LoadingScreen />
-      <div id="game-container">
-        <div id="gameView"></div>
-      </div> */}
-
-      <header>
-        <div className="flex items-center gap-2">
-          <span>00</span>
-          <span>03:58:00</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span>14:30</span>
-          <Wifi />
-          <Menu />
-        </div>
-      </header>
-    </>
+    <GameProvider>
+      <AppContent />
+    </GameProvider>
   );
 }
 
