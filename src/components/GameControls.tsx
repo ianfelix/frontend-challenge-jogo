@@ -73,7 +73,7 @@ export const GameControls = () => {
   };
 
   return (
-    <footer className="mt-4 rounded-md bg-[#7861B9] p-4">
+    <footer className="mt-4 rounded-md bg-[#51417F] p-4">
       <div className="flex items-stretch justify-center gap-4">
         <BetControls betAmount={betAmount} setBetAmount={setBetAmount} />
         <ActionButton />

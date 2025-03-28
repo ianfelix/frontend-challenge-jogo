@@ -8,6 +8,12 @@ export const GameInitializer = () => {
   useEffect(() => {
     let mounted = true;
 
+    // Make sure loading screen is visible on mount/restart
+    const loadingScreen = document.getElementById("loading-screen");
+    if (loadingScreen) {
+      loadingScreen.style.display = "flex";
+    }
+
     const init = async () => {
       try {
         if (!initialized) {
@@ -16,8 +22,12 @@ export const GameInitializer = () => {
             setInitialized(true);
           }
         }
-      } catch {
-        // Silent error handling
+      } catch (error) {
+        console.error("Failed to initialize game:", error);
+        // Hide loading screen on error
+        if (loadingScreen) {
+          loadingScreen.style.display = "none";
+        }
       }
     };
 

@@ -10,8 +10,8 @@ import { GameProvider } from "./contexts/GameContext.tsx";
 const AppContent = () => {
   return (
     <>
-      <GameInitializer />
       <LoadingScreen />
+      <GameInitializer />
 
       <main className="grid size-full grid-rows-[auto_1fr] bg-[#2B265A] md:h-screen">
         <Header />

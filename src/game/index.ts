@@ -256,6 +256,23 @@ export const updateGamePhase = (
 // This function loads assets for the game
 async function loadAssets(): Promise<void> {
   try {
+    // Make sure the loading screen is visible before loading assets
+    const loadingScreen = document.getElementById("loading-screen");
+    const loadingProgress = document.getElementById("progress-bar");
+
+    if (loadingScreen) {
+      loadingScreen.style.display = "flex";
+      loadingScreen.style.zIndex = "9999";
+    }
+
+    if (loadingProgress) {
+      // @ts-expect-error - loadingProgress is an HTMLProgressElement
+      loadingProgress.value = 0;
+    }
+
+    // Add a small delay to ensure loading screen is visible
+    await stall(800);
+
     await Assets.init({
       manifest: {
         bundles: [
@@ -281,13 +298,8 @@ async function loadAssets(): Promise<void> {
       },
     });
 
-    // Add a small delay to show the loading screen
-    await stall(500);
-
     // Load the spinning top textures
     await Assets.loadBundle("spinning-top", (p) => {
-      const loadingScreen = document.getElementById("loading-screen");
-      const loadingProgress = document.getElementById("progress-bar");
       if (loadingProgress) {
         // @ts-expect-error - loadingProgress is an HTMLProgressElement
         loadingProgress.value = p * 100;
@@ -295,17 +307,24 @@ async function loadAssets(): Promise<void> {
 
       // Hide loading screen when loading is complete
       if (loadingScreen && p === 1) {
-        loadingScreen.style.display = "none";
+        // Wait a moment before hiding to make sure user sees 100%
+        setTimeout(() => {
+          loadingScreen.style.display = "none";
+        }, 500);
       }
     });
 
     // Load the sounds
     await Assets.loadBundle("sounds");
-  } catch {
-    // Silent error handling for asset loading
+  } catch (error) {
+    console.error("Error loading assets:", error);
+    // Error handling for asset loading
     const loadingScreen = document.getElementById("loading-screen");
     if (loadingScreen) {
-      loadingScreen.style.display = "none";
+      // Wait a moment before hiding in case of error
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+      }, 500);
     }
   }
 }
