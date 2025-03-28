@@ -27,8 +27,7 @@ export const GameInitializer = () => {
     return () => {
       mounted = false;
     };
-  }, [initialized]); // Only depend on initialized
+  }, [initialized]);
 
-  // This component doesn't render anything
   return null;
 };

@@ -2,23 +2,18 @@ import { AnimatedSprite, Text, Assets, Application, TextStyle } from "pixi.js";
 import { stall } from "../utils/staller";
 import { GamePhase } from "../contexts/GameConstants";
 
-// Create variables to store game objects
 let app: Application;
 let spinningTopSprite: AnimatedSprite;
 let multiplierText: Text;
 let gameContainer: HTMLElement | null;
 let bgSound: HTMLAudioElement;
 
-// Game state
 let currentPhase: GamePhase = GamePhase.Betting;
 let currentMultiplier: number = 1.0;
 
-// Initialize the game
 export const initGame = async (): Promise<void> => {
-  // Load assets first
   await loadAssets();
 
-  // Get the game container
   gameContainer = document.getElementById("game-container");
   if (!gameContainer) {
     return;
@@ -27,11 +22,14 @@ export const initGame = async (): Promise<void> => {
   // Create a new Pixi application
   app = new Application();
 
-  // Initialize the application
+  // Initialize the application with responsive settings
   await app.init({
     background: "#3e346d",
     width: gameContainer.clientWidth,
     height: gameContainer.clientHeight,
+    autoDensity: true,
+    resolution: window.devicePixelRatio || 1,
+    resizeTo: gameContainer,
   });
 
   // Add the canvas to the game view element
@@ -39,6 +37,10 @@ export const initGame = async (): Promise<void> => {
   if (gameView) {
     gameView.innerHTML = "";
     gameView.appendChild(app.canvas);
+
+    // Ensure the canvas is fully responsive
+    app.canvas.style.width = "100%";
+    app.canvas.style.height = "100%";
   }
 
   // Create and set up the spinning top sprite
@@ -49,7 +51,40 @@ export const initGame = async (): Promise<void> => {
 
   // Setup background sound
   setupSound();
+
+  // Handle window resize events
+  window.addEventListener("resize", handleResize);
 };
+
+// Handle resize events
+function handleResize(): void {
+  if (!app || !gameContainer) return;
+
+  // Update stage position
+  centerGameElements();
+}
+
+// Center game elements on resize
+function centerGameElements(): void {
+  if (!spinningTopSprite || !multiplierText || !app) return;
+
+  // Update spinning top position
+  spinningTopSprite.x = app.renderer.width / 2;
+  spinningTopSprite.y = app.renderer.height / 2;
+
+  // Scale spinning top based on screen size
+  const minDimension = Math.min(app.renderer.width, app.renderer.height);
+  const scale = Math.max(0.3, Math.min(0.7, minDimension / 500));
+  spinningTopSprite.scale.set(scale);
+
+  // Update multiplier text position
+  multiplierText.x = app.renderer.width / 2;
+  multiplierText.y = app.renderer.height / 3;
+
+  // Update font size
+  const fontSize = calculateResponsiveFontSize();
+  multiplierText.style.fontSize = fontSize;
+}
 
 // Set up the spinning top sprite
 function setupSpinningTop(): void {
@@ -81,10 +116,12 @@ function setupSpinningTop(): void {
 
 // Set up the multiplier text
 function setupMultiplierText(): void {
-  // Create text style
+  // Create text style with responsive font size
+  const fontSize = calculateResponsiveFontSize();
+
   const style = new TextStyle({
     fontFamily: "Arial",
-    fontSize: 64,
+    fontSize: fontSize,
     fontWeight: "bold",
     fill: "#ffffff",
     align: "center",
@@ -103,6 +140,20 @@ function setupMultiplierText(): void {
 
   // Add the text to the stage
   app.stage.addChild(multiplierText);
+}
+
+// Calculate responsive font size
+function calculateResponsiveFontSize(): number {
+  if (!app) return 64; // Default size
+
+  const width = app.renderer.width;
+  const height = app.renderer.height;
+
+  // Calculate based on the smallest dimension
+  const minDimension = Math.min(width, height);
+
+  // Scale font size proportionally to screen size
+  return Math.max(32, Math.min(64, minDimension / 8));
 }
 
 // Set up the background sound
@@ -145,6 +196,9 @@ export const updateGamePhase = (
 
   // Update the multiplier text
   multiplierText.text = `${currentMultiplier.toFixed(2)}x`;
+
+  // Make sure game elements are properly centered and sized
+  centerGameElements();
 
   // Adjust the text color based on the multiplier
   if (multiplier >= 2) {
@@ -255,21 +309,3 @@ async function loadAssets(): Promise<void> {
     }
   }
 }
-
-// Set up resize handling
-window.addEventListener("resize", () => {
-  if (gameContainer && app?.renderer) {
-    app.renderer.resize(gameContainer.clientWidth, gameContainer.clientHeight);
-
-    // Position elements if they exist
-    if (spinningTopSprite) {
-      spinningTopSprite.x = app.renderer.width / 2;
-      spinningTopSprite.y = app.renderer.height / 2;
-    }
-
-    if (multiplierText) {
-      multiplierText.x = app.renderer.width / 2;
-      multiplierText.y = app.renderer.height / 3;
-    }
-  }
-});

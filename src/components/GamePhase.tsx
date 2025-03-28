@@ -63,9 +63,11 @@ export const GamePhaseIndicator = () => {
 
   return (
     <div
-      className={`absolute right-0 bottom-4 left-0 mx-auto w-64 rounded-md ${bg} py-2 text-center font-bold shadow-md`}
+      className={`absolute right-0 bottom-4 left-0 mx-auto w-52 rounded-md sm:w-56 md:w-64 ${bg} py-1 text-center font-bold shadow-md sm:py-2`}
     >
-      <p className={`uppercase ${textColor}`}>{text}</p>
+      <p className={`text-xs uppercase sm:text-sm md:text-base ${textColor}`}>
+        {text}
+      </p>
     </div>
   );
 };

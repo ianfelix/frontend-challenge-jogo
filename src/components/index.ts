@@ -1,7 +1,6 @@
 export * from "./Bets";
 export * from "./BetControls";
 export * from "./GameControls";
-export * from "./GameDebug";
 export * from "./GameHistory";
 export * from "./GameInitializer";
 export * from "./GamePhase";

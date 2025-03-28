@@ -2,7 +2,6 @@ import { IGameEvent, IPlaceBetDTO, ICashoutDTO } from "../models";
 import { GamePhase } from "../contexts/GameConstants";
 import { useEffect, useRef, useCallback } from "react";
 
-// Define events we'll use
 type GameSocketEventHandlers = {
   onGameUpdate?: (gameEvent: IGameEvent) => void;
   onConnect?: () => void;
@@ -10,7 +9,6 @@ type GameSocketEventHandlers = {
   onError?: (error: Event) => void;
 };
 
-// Configuration constants
 const SERVER_URL = "ws://localhost:8080";
 const MAX_RECONNECT_ATTEMPTS = 10;
 const INITIAL_RECONNECT_TIMEOUT = 1000;
@@ -460,12 +458,11 @@ const createGameSocketInstance = () => {
         data: cashoutData,
       });
 
-      // High priority - try to send immediately regardless of connection state
       if (socket?.readyState === WebSocket.OPEN) {
         try {
           socket.send(message);
         } catch {
-          // Silent fail, UI already updated locally
+          // Silent fail
         }
       } else {
         // Force reconnection
@@ -481,7 +478,7 @@ const createGameSocketInstance = () => {
                 // Silent fail
               }
             }
-          }, i * 50); // Very short delays: 0ms, 50ms, 100ms
+          }, i * 50);
         }
       }
     },
@@ -507,11 +504,8 @@ const createGameSocketInstance = () => {
   };
 };
 
-// Initialize the WebSocket connection
 const gameSocket = createGameSocketInstance();
 
-// Force initial connection
 gameSocket._connect();
 
-// Expose the instance
 export { gameSocket };

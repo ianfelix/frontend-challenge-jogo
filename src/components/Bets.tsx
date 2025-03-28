@@ -48,7 +48,7 @@ const Bets = () => {
 
   return (
     <aside className="h-full w-full">
-      <div className="h-full rounded-sm bg-[#51417F]">
+      <div className="h-full max-h-[calc(100vh-200px)] overflow-y-auto rounded-sm bg-[#51417F]">
         <div className="flex items-center justify-center border-b border-[#3A5588] p-2">
           <h2 className="text-lg text-white">Bets</h2>
           <span className="ml-2 text-xs font-medium text-[#40EFFA]">

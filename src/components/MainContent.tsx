@@ -2,7 +2,6 @@ import { Bets } from "./Bets";
 import { GameHistory } from "./GameHistory";
 import { GameView } from "./GameView";
 import { GameControls } from "./GameControls";
-import { GameDebug } from "./GameDebug";
 
 export const MainContent = () => {
   return (
@@ -21,9 +20,6 @@ export const MainContent = () => {
       <div className="block space-y-4 md:hidden">
         <Bets />
       </div>
-
-      {/* Debug panel */}
-      <GameDebug />
     </div>
   );
 };

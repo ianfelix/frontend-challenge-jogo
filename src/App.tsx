@@ -13,7 +13,7 @@ const AppContent = () => {
       <GameInitializer />
       <LoadingScreen />
 
-      <main className="grid size-full h-screen grid-rows-[auto_1fr] bg-[#2B265A]">
+      <main className="grid size-full grid-rows-[auto_1fr] bg-[#2B265A] md:h-screen">
         <Header />
         <MainContent />
       </main>
